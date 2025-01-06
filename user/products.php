@@ -2,11 +2,11 @@
 session_start();
 
 // Check if the user is requesting a logout
-if (isset($_GET['logout'])) {
-    session_destroy(); // Destroy the session
-    header("Location: login.php"); // Redirect to the login page
-    exit();
-}
+// if (isset($_GET['logout'])) {
+//     session_destroy(); // Destroy the session
+//     header("Location: login.php"); // Redirect to the login page
+//     exit();
+// }
 
 
 include '../utils/config.php';
@@ -54,7 +54,11 @@ $products = mysqli_fetch_all($result, MYSQLI_ASSOC);
                                 <h5 class="card-title"><?php echo htmlspecialchars($product['Name']); ?></h5>
                                 <p class="card-text"><?php echo htmlspecialchars($product['Description']); ?></p>
                                 <p class="text-muted">Price: $<?php echo htmlspecialchars($product['Price']); ?></p>
-                                <a href="#" class="btn btn-info">Add to Cart</a>
+                                <form action="../user/add_to_cart.php" method="POST">
+                                    <input type="hidden" name="product_id" value="<?php echo $product['Id']; ?>">
+                                    <button type="submit" class="btn btn-info">Add to Cart</button>
+                                </form>
+
                             </div>
                         </div>
                     </div>
@@ -66,4 +70,4 @@ $products = mysqli_fetch_all($result, MYSQLI_ASSOC);
     </div>
 </body>
 
-</html> 
+</html>

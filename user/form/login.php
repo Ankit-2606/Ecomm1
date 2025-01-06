@@ -5,6 +5,10 @@ if (isset($_SESSION['login_error'])) {
     $loginError = $_SESSION['login_error'];
     unset($_SESSION['login_error']); // Clear the error after showing the modal
 }
+
+
+?>
+
 ?>
 
 <!DOCTYPE html>
