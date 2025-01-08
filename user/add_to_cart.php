@@ -2,11 +2,13 @@
 session_start();
 include '../utils/config.php'; // Include your database connection
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!isset($_SESSION['user_id'])) {
-        die("User not logged in");
-    }
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to login page with a message
+    header("Location: ../user/form/login.php?message=Please log in to add products to your cart");
+    exit();
+}
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $userId = $_SESSION['user_id'];
     $productId = intval($_POST['product_id']);
 

@@ -38,7 +38,7 @@ $current_page = isset($_SERVER['PHP_SELF']) ? basename($_SERVER['PHP_SELF']) : '
                         // Always show "Logout" on the products.php page
                         if ($current_page === 'products.php') {
                             echo '<li class="nav-item">
-                                    <form method="post" action="logout.php" class="d-inline">
+                                    <form method="post" action="../user/form/logout.php" class="d-inline">
     <button type="submit" class="btn nav-link text-dark border-0">Logout</button>
 </form>
 

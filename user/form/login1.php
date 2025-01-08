@@ -1,5 +1,12 @@
 <?php
 session_start();
+// Display any message passed via the URL (e.g., login.php?message=Please+log+in)
+if (isset($_GET['message'])) {
+    $message = htmlspecialchars($_GET['message']);
+    echo "<div class='alert alert-warning text-center'>$message</div>";
+}
+
+
 $_SESSION['username'] = $username;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['name']) && isset($_POST['password'])) {
