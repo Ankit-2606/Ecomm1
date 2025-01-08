@@ -10,7 +10,7 @@ session_start();
 
 
 include '../utils/config.php';
-
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 // Fetch products from the database
 $category = isset($_GET['Category']) ? $_GET['Category'] : '';
 $query = $category ? "SELECT * FROM products WHERE Category='$category'" : "SELECT * FROM products";
@@ -36,6 +36,13 @@ $products = mysqli_fetch_all($result, MYSQLI_ASSOC);
 </head>
 
 <body>
+    <div class="container mt-3">
+        <?php if ($username): ?>
+            <div class="alert alert-info text-center">
+                Welcome, <strong><?php echo htmlspecialchars($username); ?></strong>!
+            </div>
+        <?php endif; ?>
+    </div>
     <div class="container mt-5">
         <h1 class="text-center">Our Products</h1>
         <div class="mb-4 text-center">

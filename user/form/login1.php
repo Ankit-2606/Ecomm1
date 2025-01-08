@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+$_SESSION['username'] = $username;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['name']) && isset($_POST['password'])) {
         $Name = $_POST['name'];
