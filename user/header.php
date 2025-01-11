@@ -47,7 +47,7 @@ $current_page = isset($_SERVER['PHP_SELF']) ? basename($_SERVER['PHP_SELF']) : '
                             // Show Login/Logout based on session
                             if (isset($_SESSION['username'])) {
                                 echo '<li class="nav-item">
-                                        <form method="post" action="logout.php" class="d-inline">
+                                        <form method="post" action="../user/form/logout.php" class="d-inline">
                                             <button type="submit" class="btn nav-link text-dark border-0">Logout</button>
                                         </form>
                                       </li>';

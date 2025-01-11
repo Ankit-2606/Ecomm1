@@ -75,6 +75,7 @@ $products = mysqli_fetch_all($result, MYSQLI_ASSOC);
             <?php } ?>
         </div>
     </div>
+
 </body>
 
 </html>
