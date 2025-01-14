@@ -1,6 +1,40 @@
 <?php
 // session_start(); // Ensure the session is started
+ include $_SERVER['DOCUMENT_ROOT'] . '/Ecomm1/utils/config.php';
+
 $current_page = isset($_SERVER['PHP_SELF']) ? basename($_SERVER['PHP_SELF']) : ''; // Get the current page name safely
+
+
+$cart_count = 0;
+$total_price = 0.00;
+
+if (isset($_SESSION['username'])) {
+    $username = $_SESSION['username'];  // Store the username in a variable
+} else {
+    $username = 'Guest';  // If not logged in, set the username to "Guest"
+}
+
+// Check if the user is logged in
+if (isset($_SESSION['user_id'])) {
+    $userId = $_SESSION['user_id'];
+
+    // Query to get the total quantity of items in the cart
+    $query = "SELECT SUM(Quantity) AS total_items, SUM(p.Price * c.Quantity) AS total_price 
+              FROM cart c 
+              JOIN products p ON c.Product_Id = p.Id 
+              WHERE c.User_Id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+
+    // Get cart count and total price
+    $cart_count = $row['total_items'] ?? 0; // Set to 0 if null
+    $total_price = $row['total_price'] ?? 0.00; // Set to 0 if null
+    $stmt->close();
+}
+
 ?>
 
 
@@ -31,7 +65,7 @@ $current_page = isset($_SERVER['PHP_SELF']) ? basename($_SERVER['PHP_SELF']) : '
 
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="../products.php">Products</a>
+                            <a class="nav-link" href="/Ecomm1/user/products.php">Products</a>
                         </li>
 
                         <?php
@@ -66,11 +100,15 @@ $current_page = isset($_SERVER['PHP_SELF']) ? basename($_SERVER['PHP_SELF']) : '
                             <a class="nav-link" href="#">Contacts</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fa-solid fa-cart-shopping"></i><sup>1</sup></a>
+                            <a class="nav-link" href="../user/cart.php">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <sup class="badge bg-danger"><?php echo $cart_count; ?></sup>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Total Price:</a>
-                        </li>
+    <span class="nav-link text-dark">Total: $<?php echo number_format($total_price, 2); ?></span>
+</li>
+
                     </ul>
                     <form class="d-flex" role="search">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">

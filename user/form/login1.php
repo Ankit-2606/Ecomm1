@@ -1,5 +1,6 @@
 <?php
 session_start();
+include '../utils/config.php';
 // Display any message passed via the URL (e.g., login.php?message=Please+log+in)
 if (isset($_GET['message'])) {
     $message = htmlspecialchars($_GET['message']);
