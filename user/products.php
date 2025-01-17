@@ -53,19 +53,31 @@ $products = mysqli_fetch_all($result, MYSQLI_ASSOC);
         </div>
         <div class="row">
             <?php if (!empty($products)) { ?>
-                <?php foreach ($products as $product): ?>
+                <?php foreach ($products as $product): $discounted_price = $product['Price'] - ($product['Price'] * $product['Discount'] / 100); ?>
                     <div class="col-md-4">
                         <div class="card mb-4 shadow-sm">
                             <img src="/Ecomm1/images/<?php echo htmlspecialchars($product['Image']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($product['Name']); ?>">
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo htmlspecialchars($product['Name']); ?></h5>
                                 <p class="card-text"><?php echo htmlspecialchars($product['Description']); ?></p>
-                                <p class="text-muted">Price: $<?php echo htmlspecialchars($product['Price']); ?></p>
+                                <p class="text-muted">
+                                    <strong>Price:</strong> <span class="text-decoration-line-through">$<?php echo htmlspecialchars($product['Price']); ?></span><br>
+                                    <strong>Discounted Price:</strong> $<?php echo number_format($discounted_price, 2); ?>
+                                </p>
+
+
+
                                 <form action="../user/add_to_cart.php" method="POST">
                                     <input type="hidden" name="product_id" value="<?php echo $product['Id']; ?>">
-                                    <button type="submit" class="btn btn-info">Add to Cart</button>
+                                    <button type="submit" class="btn btn-primary mb-2 fw-bold">Add to Cart</button>
                                 </form>
-
+                               
+                                <form action="../user/checkout.php" method="POST">
+                                    <input type="hidden" name="product_id" value="<?php echo $product['Id']; ?>">
+                                    <input type="hidden" name="product_name" value="<?php echo htmlspecialchars($product['Name']); ?>">
+                                    <input type="hidden" name="product_price" value="<?php echo $discounted_price; ?>">
+                                    <button type="submit" class="btn btn-info w-100 fw-bold">Buy Now</button>
+                                </form>
                             </div>
                         </div>
                     </div>

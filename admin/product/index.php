@@ -1,44 +1,72 @@
+<?php
+include $_SERVER['DOCUMENT_ROOT'] . '/Ecomm1/utils/config.php';
+
+// Handle form submission for updating discounts
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_discount'])) {
+    $product_id = intval($_POST['product_id']);
+    $discount = floatval($_POST['discount']);
+
+    $query = "UPDATE products SET Discount = ? WHERE Id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("di", $discount, $product_id);
+
+    if ($stmt->execute()) {
+        echo "<div class='alert alert-success'>Discount updated successfully!</div>";
+    } else {
+        echo "<div class='alert alert-danger'>Failed to update discount.</div>";
+    }
+
+    $stmt->close();
+}
+
+// Fetch all products
+$query = "SELECT Id, Name, Price, Discount FROM products";
+$result = $conn->query($query);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Ecomm1/user/header.php'; ?>
+    <title>Manage Discounts</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
-
 <body>
- <div class="bg-info font-monospace mt-1 pt-0">
-    <ul class="list-unstyled d-flex justify-content-center">
-      <li><a href="" class="text-decoration-none text-primary fw-bold fs-4 px-5">MOBILE</li>
-      <li><a href="" class="text-decoration-none text-primary fw-bold fs-4 px-5">LAPTOP</li>
-      <li><a href="" class="text-decoration-none text-primary fw-bold fs-4 px-5">HEADPHONE</li>
-    </ul>
-  </div>
-
-<h1 class="text-primary font-monospace text-center">Home</h1>
-  <div class="card" style="width: 15rem;">
-    <img src=<img src="Mobile_vivo.png" class="card-img-top" alt="...">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
-    </div>
-  </div>
-  <footer>
-        <div class="footer-content">
-            <p>&copy; 2024 Ecomm1. All rights reserved.</p>
-            <ul class="social-links">
-                <li><a href="#"><i class="fab fa-facebook"></i></a></li>
-                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-            </ul>
-        </div>
-    </footer>
-
+<div class="container mt-5">
+    <h1 class="text-center">Manage Product Discounts</h1>
+    <table class="table table-bordered mt-4">
+        <thead>
+        <tr>
+            <th>Product ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Current Discount (%)</th>
+            <th>Update Discount</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php while ($row = $result->fetch_assoc()) { ?>
+            <tr>
+                <td><?php echo $row['Id']; ?></td>
+                <td><?php echo $row['Name']; ?></td>
+                <td><?php echo $row['Price']; ?></td>
+                <td><?php echo $row['Discount']; ?></td>
+                <td>
+                    <form method="POST" class="d-flex">
+                        <input type="hidden" name="product_id" value="<?php echo $row['Id']; ?>">
+                        <input type="number" name="discount" class="form-control me-2" step="0.01" min="0" max="100" required>
+                        <button type="submit" name="update_discount" class="btn btn-primary">Update</button>
+                    </form>
+                </td>
+            </tr>
+        <?php } ?>
+        </tbody>
+    </table>
+</div>
 </body>
-
 </html>
+
+<?php
+$conn->close();
+?>
